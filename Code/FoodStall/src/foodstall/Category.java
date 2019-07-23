@@ -76,7 +76,7 @@ this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize()
 
         jLabel4.setFont(new java.awt.Font("Palatino Linotype", 1, 18)); // NOI18N
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/user.png"))); // NOI18N
-        jLabel4.setText("       User");
+        jLabel4.setText("     Waiter");
         jLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel4MouseClicked(evt);
@@ -85,7 +85,7 @@ this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize()
 
         jLabel5.setFont(new java.awt.Font("Palatino Linotype", 1, 18)); // NOI18N
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/admin.png"))); // NOI18N
-        jLabel5.setText("       Admin");
+        jLabel5.setText("       Manager");
         jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel5MouseClicked(evt);

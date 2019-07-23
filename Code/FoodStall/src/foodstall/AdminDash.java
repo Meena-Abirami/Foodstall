@@ -21,9 +21,8 @@ public class AdminDash extends javax.swing.JFrame {
         initComponents();
         setSize(660, 520);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
-  
-        
+        this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
+
     }
 
     /**
@@ -72,7 +71,7 @@ this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize()
         );
 
         jPanel1.add(jPanel2);
-        jPanel2.setBounds(0, 0, 660, 105);
+        jPanel2.setBounds(0, 0, 660, 109);
 
         jButton2.setBackground(new java.awt.Color(255, 218, 68));
         jButton2.setFont(new java.awt.Font("Baskerville Old Face", 1, 14)); // NOI18N
@@ -84,19 +83,19 @@ this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize()
             }
         });
         jPanel1.add(jButton2);
-        jButton2.setBounds(240, 230, 160, 40);
+        jButton2.setBounds(240, 230, 200, 40);
 
         jButton3.setBackground(new java.awt.Color(255, 218, 68));
         jButton3.setFont(new java.awt.Font("Baskerville Old Face", 1, 14)); // NOI18N
         jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.setText("Delete Foods");
+        jButton3.setText("Update/Delete Foods");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
         jPanel1.add(jButton3);
-        jButton3.setBounds(240, 300, 160, 40);
+        jButton3.setBounds(240, 300, 200, 40);
 
         jButton4.setBackground(new java.awt.Color(255, 218, 68));
         jButton4.setFont(new java.awt.Font("Baskerville Old Face", 1, 14)); // NOI18N
@@ -108,7 +107,7 @@ this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize()
             }
         });
         jPanel1.add(jButton4);
-        jButton4.setBounds(240, 380, 160, 40);
+        jButton4.setBounds(240, 380, 200, 40);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tt.jpg"))); // NOI18N
         jPanel1.add(jLabel1);
@@ -121,11 +120,11 @@ this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize()
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-          new AddFoods().setVisible(true);
+        new AddFoods().setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-         new DeleteFoods().setVisible(true);
+        new DeleteFoods().setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed

@@ -9,6 +9,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.Connection;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.time.LocalDateTime;
@@ -23,11 +24,13 @@ import javax.swing.table.DefaultTableModel;
  * @author EGC
  */
 public class ViewOrder extends javax.swing.JFrame {
-Statement st;
-String combo;
-String date;
-String fname,qua,price,name;
- java.sql.Connection con;
+
+    Statement st;
+    String combo;
+    String date;
+    String fname, qua, price, name;
+    Connection con;
+
     /**
      * Creates new form ViewOrder
      */
@@ -35,16 +38,13 @@ String fname,qua,price,name;
         initComponents();
         this.setResizable(false);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
-  
-             try
-        {
-              Class.forName("com.mysql.jdbc.Driver");
-             con=DriverManager.getConnection("jdbc:mysql://localhost:3306/foodstall","root","");
-            st=con.createStatement();
-        }
-        catch(Exception e)
-        {
+        this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/foodstall", "root", "");
+            st = con.createStatement();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -101,7 +101,7 @@ this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize()
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(268, 268, 268)
                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(315, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -151,7 +151,7 @@ this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -188,7 +188,7 @@ this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize()
         jLabel5.setFont(new java.awt.Font("Baskerville Old Face", 1, 14)); // NOI18N
         jLabel5.setText("Quantity");
 
-        jButton1.setText("Submit");
+        jButton1.setText("Approve");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -277,9 +277,9 @@ this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize()
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -310,138 +310,117 @@ this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize()
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-         try {
-              DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
-   LocalDateTime now = LocalDateTime.now(); 
-    date=dtf.format(now);
+        try {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDateTime now = LocalDateTime.now();
+            date = dtf.format(now);
             Vector col = new Vector();
             Vector data = new Vector();
-           ResultSet rs = st.executeQuery("SELECT * FROM cart where date='"+date+"'");
+            ResultSet rs = st.executeQuery("SELECT * FROM cart where date='" + date + "'");
             ResultSetMetaData md = rs.getMetaData();
             int columns = md.getColumnCount();
-            for (int i = 1; i <= columns; i++) 
-            {
+            for (int i = 1; i <= columns; i++) {
                 col.addElement(md.getColumnName(i));
             }
             //System.out.println(i);
-            while (rs.next()) 
-            {
+            while (rs.next()) {
                 Vector row = new Vector(columns);
-                for (int i = 1; i <= columns; i++) 
-                {
+                for (int i = 1; i <= columns; i++) {
                     row.addElement(rs.getObject(i));
                 }
                 data.addElement(row);
             }
             DefaultTableModel model = new DefaultTableModel(data, col);
             jTable1.setModel(model);
-}
-catch(Exception e)
-{
-    e.printStackTrace();
-}
-         
-         String qry="Select DISTINCT user from cart";
-        try
-        {
-                ResultSet rs=st.executeQuery(qry);
-                while(rs.next())
-                {
-                    jComboBox1.addItem(rs.getString("user"));
-                }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch(Exception ex)
-        {
+
+        String qry = "Select DISTINCT user from cart";
+        try {
+            ResultSet rs = st.executeQuery(qry);
+            while (rs.next()) {
+                jComboBox1.addItem(rs.getString("user"));
+            }
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_formWindowOpened
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-          combo=jComboBox1.getSelectedItem().toString();
+        combo = jComboBox1.getSelectedItem().toString();
         try {
             Vector col = new Vector();
             Vector data = new Vector();
-           ResultSet rs = st.executeQuery("SELECT * FROM cart where user='"+combo+"'");
+            ResultSet rs = st.executeQuery("SELECT * FROM cart where user='" + combo + "'");
             ResultSetMetaData md = rs.getMetaData();
             int columns = md.getColumnCount();
-            for (int i = 1; i <= columns; i++) 
-            {
+            for (int i = 1; i <= columns; i++) {
                 col.addElement(md.getColumnName(i));
             }
             //System.out.println(i);
-            while (rs.next()) 
-            {
+            while (rs.next()) {
                 Vector row = new Vector(columns);
-                for (int i = 1; i <= columns; i++) 
-                {
+                for (int i = 1; i <= columns; i++) {
                     row.addElement(rs.getObject(i));
                 }
                 data.addElement(row);
             }
             DefaultTableModel model = new DefaultTableModel(data, col);
             jTable1.setModel(model);
-}
-catch(Exception e)
-{
-    e.printStackTrace();
-}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-         int row=jTable1.rowAtPoint(evt.getPoint());
+        int row = jTable1.rowAtPoint(evt.getPoint());
 
-        int col= jTable1.columnAtPoint(evt.getPoint());
-        name=jTable1.getValueAt(row, 0).toString();
-         fname=jTable1.getValueAt(row, 1).toString();
-           qua=jTable1.getValueAt(row, 2).toString();
-            price=jTable1.getValueAt(row, 3).toString();
+        int col = jTable1.columnAtPoint(evt.getPoint());
+        name = jTable1.getValueAt(row, 0).toString();
+        fname = jTable1.getValueAt(row, 1).toString();
+        qua = jTable1.getValueAt(row, 2).toString();
+        price = jTable1.getValueAt(row, 3).toString();
 //         JOptionPane.showMessageDialog(rootPane,id);
 //          JOptionPane.showMessageDialog(rootPane,name);
         //System.out.println(owner);
-       
-         try
-        {
+
+        try {
 //            JOptionPane.showMessageDialog(rootPane,"Checking");
-             com.mysql.jdbc.Connection con = null;
-           Class.forName("com.mysql.jdbc.Driver").newInstance();
-           con=(com.mysql.jdbc.Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/foodstall","root","");
-           com.mysql.jdbc.Statement st1 = (com.mysql.jdbc.Statement) con.createStatement();
-             ResultSet rs1 = st1.executeQuery("SELECT * FROM cart where user='"+name+"' and quantity='"+qua+"' and price='"+price+"'");
-             while(rs1.next())
-           {
+            
+            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/foodstall", "root", "");
+            Statement st1 = con.createStatement();
+            ResultSet rs1 = st1.executeQuery("SELECT * FROM cart where user='" + name + "' and quantity='" + qua + "' and price='" + price + "'");
+            while (rs1.next()) {
 //               JOptionPane.showMessageDialog(rootPane,"Condition");
-               jTextField1.setText(rs1.getString("user"));
-               jTextField2.setText(rs1.getString("itemname"));
-               jTextField3.setText(rs1.getString("quantity"));
+                jTextField1.setText(rs1.getString("user"));
+                jTextField2.setText(rs1.getString("itemname"));
+                jTextField3.setText(rs1.getString("quantity"));
                 jTextField4.setText(rs1.getString("price"));
-           }
-        }
-        catch(Exception e)
-        {
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try
-        {
-            String s="placed";
-            fname=jTextField2.getText();
-         qua=jTextField3.getText();
-            price=jTextField4.getText();
-           String sql="UPDATE cart set status='"+s+"' where itemname='"+fname+"' and quantity='"+qua+"' and price='"+price+"'";
-            System.out.println("sql"+sql);
-           st.executeUpdate(sql);
+        try {
+            String s = "placed";
+            fname = jTextField2.getText();
+            qua = jTextField3.getText();
+            price = jTextField4.getText();
+            String sql = "UPDATE cart set status='" + s + "' where itemname='" + fname + "' and quantity='" + qua + "' and price='" + price + "'";
+            System.out.println("sql" + sql);
+            st.executeUpdate(sql);
             // st1.executeQuery("SELECT * FROM foods where foodname='"+fname+"' and quantity='"+qua+"'");
-               JOptionPane.showMessageDialog(this, "Order Placed");
-//               this.invalidate();
-//this.validate();
-//this.repaint();
-this.setVisible(false);
-new AdminDash().setVisible(true);
-        }
-        catch(Exception e)
-        {
+            JOptionPane.showMessageDialog(this, "Order Placed");
+            //this.invalidate();
+            //this.validate();
+            //this.repaint();
+            this.setVisible(false);
+            new AdminDash().setVisible(true);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }//GEN-LAST:event_jButton1ActionPerformed

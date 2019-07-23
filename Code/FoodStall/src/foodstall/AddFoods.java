@@ -11,6 +11,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,29 +24,31 @@ import javax.swing.JOptionPane;
  * @author EGC
  */
 public class AddFoods extends javax.swing.JFrame {
- File ff;
- String combo;
+
+    File ff;
+    String foodItem;
+
     /**
      * Creates new form AddFoods
      */
     public AddFoods() {
         initComponents();
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
-  
-         buttonGroup1.add(jRadioButton1);
+        this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
+
+        buttonGroup1.add(jRadioButton1);
         buttonGroup1.add(jRadioButton2);
-         buttonGroup1.add(jRadioButton3);
+        buttonGroup1.add(jRadioButton3);
         jRadioButton1.setActionCommand("Starters");
         jRadioButton2.setActionCommand("Main Dish");
         jRadioButton2.setActionCommand("Desserts");
-        
-         buttonGroup2.add(jRadioButton4);
+
+        buttonGroup2.add(jRadioButton4);
         buttonGroup2.add(jRadioButton5);
-        
+
         jRadioButton4.setActionCommand("Veg");
         jRadioButton5.setActionCommand("Non Veg");
-     
+
     }
 
     /**
@@ -127,6 +130,11 @@ this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize()
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/no-cover.png"))); // NOI18N
 
         jRadioButton1.setText("Starters");
+        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton1ActionPerformed(evt);
+            }
+        });
 
         jRadioButton2.setText("Main Dish");
 
@@ -264,18 +272,17 @@ this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize()
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
- try {
+        try {
             JFileChooser chooser = new JFileChooser("./Food");
             chooser.setMultiSelectionEnabled(true);
             chooser.showOpenDialog(this);
-           
+
             ff = chooser.getSelectedFile();
-            String location = ff.getPath();
             jTextField3.setText(ff.getName());
         } catch (Exception e) {
             e.printStackTrace();
-        } 
- jLabel9.setIcon(new ImageIcon("./Food/"+ff.getName()));
+        }
+        jLabel9.setIcon(new ImageIcon("./Food/" + ff.getName()));
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
@@ -283,42 +290,71 @@ this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize()
     }//GEN-LAST:event_jRadioButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
-         if(jTextField1.getText().toString().equals("")
-                  &&jTextField2.getText().toString().equals("")&&jTextField3.getText().toString().equals("")){
-                JOptionPane.showMessageDialog(this, "Fill All Fields");
+
+        if (jTextField1.getText().equals("")
+                && jTextField2.getText().equals("") && jTextField3.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Fill All Fields");
+        } else {
+            try {
+                foodItem = jComboBox1.getSelectedItem().toString();
+                if (this.updateIfItemExists(foodItem)) {
+                    JOptionPane.showMessageDialog(this, "Food already exist! To update select Update/Delete Foods.");
+                } else {
+
+                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/foodstall", "root", "");
+                    //Preapared Statement
+                    PreparedStatement pst = connection.prepareStatement("insert into foods values(?,?,?,?,?,?)");
+                    
+                    pst.setString(1, foodItem);
+                    pst.setString(2, buttonGroup1.getSelection().getActionCommand());
+                    pst.setString(3, jTextField1.getText());
+                    pst.setString(4, jTextField2.getText());
+                    pst.setString(5, jTextField3.getText());
+                    pst.setString(6, buttonGroup2.getSelection().getActionCommand());
+                    pst.executeUpdate();
+
+                    JOptionPane.showMessageDialog(this, "Food Added!");
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(UserRegister.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        else{
-          try{
-              combo=jComboBox1.getSelectedItem().toString();
-         Connection connection=DriverManager.getConnection
-                 ("jdbc:mysql://localhost:3306/foodstall","root","");
-                //Preapared Statement
-                PreparedStatement pst=connection.prepareStatement("insert into foods values(?,?,?,?,?,?)");
-        
-       //  String sql="insert into register values(?,?,?)";
-         
-           // pst=con.prepareStatement(sql);
-            pst.setString(1, combo);
-            pst.setString(2,buttonGroup1.getSelection().getActionCommand());
-            pst.setString(3,jTextField1.getText().toString());
-           pst.setString(4, jTextField2.getText().toString());
-             pst.setString(5, jTextField3.getText().toString());
-             pst.setString(6, buttonGroup2.getSelection().getActionCommand());
-            pst.executeUpdate();
-            
-                JOptionPane.showMessageDialog(this, "Food Added");
-              
-             
-         }
-         catch (SQLException ex) {
-           Logger.getLogger(UserRegister.class.getName()).log(Level.SEVERE, null, ex);
-       }
-         }
-         jTextField1.setText("");
-         jTextField2.setText("");
-         jTextField3.setText("");
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRadioButton1ActionPerformed
+
+    private boolean updateIfItemExists(String foodItem) {
+
+        final String queryCheck = "SELECT foodname FROM foods WHERE foodname = ?";
+        try {
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/foodstall", "root", "");
+            final PreparedStatement ps = connection.prepareStatement(queryCheck);
+            ps.setString(1, foodItem);
+            final ResultSet resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+//                final String updateQuery = "UPDATE foods SET category = ?, quantity = quantity + ?, price = price + ?, image = ?, foodtype = ? WHERE foodname = ?";
+//                final PreparedStatement updateStmt = connection.prepareStatement(updateQuery);
+//                updateStmt.setString(1, buttonGroup1.getSelection().getActionCommand());
+//                updateStmt.setString(2, jTextField1.getText());
+//                updateStmt.setString(3, jTextField2.getText());
+//                updateStmt.setString(4, jTextField3.getText());
+//                updateStmt.setString(5, buttonGroup2.getSelection().getActionCommand());
+//                updateStmt.setString(6, foodItem);
+//                updateStmt.executeUpdate();
+                return true;
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(UserRegister.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
+
+    }
 
     /**
      * @param args the command line arguments

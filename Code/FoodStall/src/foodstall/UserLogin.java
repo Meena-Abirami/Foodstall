@@ -21,16 +21,18 @@ import javax.swing.JOptionPane;
  * @author EGC
  */
 public class UserLogin extends javax.swing.JFrame {
-public static String mail;
+
+    public static String mail;
+
     /**
      * Creates new form UserLogin
      */
     public UserLogin() {
         initComponents();
-         this.setResizable(false);
-         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
-  
+        this.setResizable(false);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
+
         this.setTitle("User Login");
     }
 
@@ -203,29 +205,25 @@ this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize()
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       try {
+        try {
             // TODO add your handling code here:
-            
-            Connection connection=DriverManager.getConnection
-                     ("jdbc:mysql://localhost:3306/foodstall","root","");
-             String sql="select * from user where mailid=? and password=?";
-            PreparedStatement pst=connection.prepareStatement(sql);
-pst.setString(1, jTextField1.getText());
-pst.setString(2,jPasswordField1.getText());
-ResultSet rs=pst.executeQuery();
-if(rs.next())
-{
-    mail=jTextField1.getText().toString();
-JOptionPane.showMessageDialog(null,"Username and Password Matched");
-new UserDash().setVisible(true);
- 
-}
-else
-{
-JOptionPane.showMessageDialog(null, "Not Match");
-}
-jTextField1.setText("");
-jPasswordField1.setText("");
+
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/foodstall", "root", "");
+            String sql = "select * from user where mailid=? and password=?";
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setString(1, jTextField1.getText());
+            pst.setString(2, jPasswordField1.getText());
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                mail = jTextField1.getText().toString();
+                JOptionPane.showMessageDialog(null, "Login Successful!");
+                new UserDash().setVisible(true);
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Check username/password!");
+            }
+            jTextField1.setText("");
+            jPasswordField1.setText("");
         } catch (SQLException ex) {
             Logger.getLogger(UserLogin.class.getName()).log(Level.SEVERE, null, ex);
         }

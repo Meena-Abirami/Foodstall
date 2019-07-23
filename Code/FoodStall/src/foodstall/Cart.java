@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,30 +30,29 @@ import javax.swing.table.DefaultTableModel;
  * @author EGC
  */
 public class Cart extends javax.swing.JFrame {
-Statement st;
-String combo;
- java.sql.Connection con;
- int count=1;
- 
-String fname,qua,price;
+
+    Statement st, st1;
+    String combo;
+    Connection con;
+    int count = 1;
+
+    String fname, qua, price;
+
     /**
      * Creates new form Cart
      */
     public Cart() {
         initComponents();
-         jLabel12.setVisible(false);
+        jLabel12.setVisible(false);
         this.setResizable(false);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
-  
-             try
-        {
-              Class.forName("com.mysql.jdbc.Driver");
-             con=DriverManager.getConnection("jdbc:mysql://localhost:3306/foodstall","root","");
-            st=con.createStatement();
-        }
-        catch(Exception e)
-        {
+        this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/foodstall", "root", "");
+            st = con.createStatement();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -141,7 +141,7 @@ this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize()
 
         jLabel2.setFont(new java.awt.Font("Baskerville Old Face", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(51, 0, 102));
-        jLabel2.setText("Food Name");
+        jLabel2.setText("Food");
 
         jLabel3.setFont(new java.awt.Font("Baskerville Old Face", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(51, 0, 102));
@@ -167,7 +167,7 @@ this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize()
         jButton1.setBackground(new java.awt.Color(255, 218, 68));
         jButton1.setFont(new java.awt.Font("Baskerville Old Face", 1, 18)); // NOI18N
         jButton1.setForeground(new java.awt.Color(51, 0, 102));
-        jButton1.setText("Add Buy");
+        jButton1.setText("Order");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -308,186 +308,157 @@ this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize()
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-             try {
+        try {
             Vector col = new Vector();
             Vector data = new Vector();
-           ResultSet rs = st.executeQuery("SELECT * FROM foods");
+            ResultSet rs = st.executeQuery("SELECT * FROM foods");
             ResultSetMetaData md = rs.getMetaData();
             int columns = md.getColumnCount();
-            for (int i = 1; i <= columns; i++) 
-            {
+            for (int i = 1; i <= columns; i++) {
                 col.addElement(md.getColumnName(i));
             }
             //System.out.println(i);
-            while (rs.next()) 
-            {
+            while (rs.next()) {
                 Vector row = new Vector(columns);
-                for (int i = 1; i <= columns; i++) 
-                {
+                for (int i = 1; i <= columns; i++) {
                     row.addElement(rs.getObject(i));
                 }
                 data.addElement(row);
             }
             DefaultTableModel model = new DefaultTableModel(data, col);
             jTable1.setModel(model);
-}
-catch(Exception e)
-{
-    e.printStackTrace();
-}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_formWindowOpened
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-         combo=jComboBox1.getSelectedItem().toString();
-         if(combo.contains("Veg")){
-              try {
-            Vector col = new Vector();
-            Vector data = new Vector();
-           ResultSet rs = st.executeQuery("SELECT * FROM foods where foodtype='"+combo+"'");
-            ResultSetMetaData md = rs.getMetaData();
-            int columns = md.getColumnCount();
-            for (int i = 1; i <= columns; i++) 
-            {
-                col.addElement(md.getColumnName(i));
-            }
-            //System.out.println(i);
-            while (rs.next()) 
-            {
-                Vector row = new Vector(columns);
-                for (int i = 1; i <= columns; i++) 
-                {
-                    row.addElement(rs.getObject(i));
+        combo = jComboBox1.getSelectedItem().toString();
+        if (combo.contains("Veg")) {
+            try {
+                Vector col = new Vector();
+                Vector data = new Vector();
+                ResultSet rs = st.executeQuery("SELECT * FROM foods where foodtype='" + combo + "'");
+                ResultSetMetaData md = rs.getMetaData();
+                int columns = md.getColumnCount();
+                for (int i = 1; i <= columns; i++) {
+                    col.addElement(md.getColumnName(i));
                 }
-                data.addElement(row);
-            }
-            DefaultTableModel model = new DefaultTableModel(data, col);
-            jTable1.setModel(model);
-}
-catch(Exception e)
-{
-    e.printStackTrace();
-}
-         }
-         else{
-                   try {
-            Vector col = new Vector();
-            Vector data = new Vector();
-           ResultSet rs = st.executeQuery("SELECT * FROM foods where foodtype='"+combo+"'");
-            ResultSetMetaData md = rs.getMetaData();
-            int columns = md.getColumnCount();
-            for (int i = 1; i <= columns; i++) 
-            {
-                col.addElement(md.getColumnName(i));
-            }
-            //System.out.println(i);
-            while (rs.next()) 
-            {
-                Vector row = new Vector(columns);
-                for (int i = 1; i <= columns; i++) 
-                {
-                    row.addElement(rs.getObject(i));
+                //System.out.println(i);
+                while (rs.next()) {
+                    Vector row = new Vector(columns);
+                    for (int i = 1; i <= columns; i++) {
+                        row.addElement(rs.getObject(i));
+                    }
+                    data.addElement(row);
                 }
-                data.addElement(row);
+                DefaultTableModel model = new DefaultTableModel(data, col);
+                jTable1.setModel(model);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            DefaultTableModel model = new DefaultTableModel(data, col);
-            jTable1.setModel(model);
-}
-catch(Exception e)
-{
-    e.printStackTrace();
-}
-         }
+        } else {
+            try {
+                Vector col = new Vector();
+                Vector data = new Vector();
+                ResultSet rs = st.executeQuery("SELECT * FROM foods where foodtype='" + combo + "'");
+                ResultSetMetaData md = rs.getMetaData();
+                int columns = md.getColumnCount();
+                for (int i = 1; i <= columns; i++) {
+                    col.addElement(md.getColumnName(i));
+                }
+                //System.out.println(i);
+                while (rs.next()) {
+                    Vector row = new Vector(columns);
+                    for (int i = 1; i <= columns; i++) {
+                        row.addElement(rs.getObject(i));
+                    }
+                    data.addElement(row);
+                }
+                DefaultTableModel model = new DefaultTableModel(data, col);
+                jTable1.setModel(model);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-       int row=jTable1.rowAtPoint(evt.getPoint());
+        int row = jTable1.rowAtPoint(evt.getPoint());
 
-        int col= jTable1.columnAtPoint(evt.getPoint());
-         fname=jTable1.getValueAt(row, 0).toString();
-           qua=jTable1.getValueAt(row, 2).toString();
-            price=jTable1.getValueAt(row, 3).toString();
+        int col = jTable1.columnAtPoint(evt.getPoint());
+        fname = jTable1.getValueAt(row, 0).toString();
+        qua = jTable1.getValueAt(row, 2).toString();
+        price = jTable1.getValueAt(row, 3).toString();
 //         JOptionPane.showMessageDialog(rootPane,id);
 //          JOptionPane.showMessageDialog(rootPane,name);
         //System.out.println(owner);
-       
-         try
-        {
+
+        try {
 //            JOptionPane.showMessageDialog(rootPane,"Checking");
-             com.mysql.jdbc.Connection con = null;
-           Class.forName("com.mysql.jdbc.Driver").newInstance();
-           con=(com.mysql.jdbc.Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/foodstall","root","");
-           com.mysql.jdbc.Statement st1 = (com.mysql.jdbc.Statement) con.createStatement();
-             ResultSet rs1 = st1.executeQuery("SELECT * FROM foods where foodname='"+fname+"' and quantity='"+qua+"'");
-             while(rs1.next())
-           {
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/foodstall", "root", "");
+            st1 = con.createStatement();
+            ResultSet rs1 = st1.executeQuery("SELECT * FROM foods where foodname='" + fname + "' and quantity='" + qua + "'");
+            while (rs1.next()) {
 //               JOptionPane.showMessageDialog(rootPane,"Condition");
-               jLabel5.setText(rs1.getString("foodname"));
-               jLabel7.setText(rs1.getString("quantity"));
-               jLabel8.setText(rs1.getString("price"));
-                jLabel11.setIcon(new ImageIcon("./Food/"+rs1.getString("image")));
-           }
-        }
-        catch(Exception e)
-        {
+                jLabel5.setText(rs1.getString("foodname"));
+                jLabel7.setText(rs1.getString("quantity"));
+                jLabel8.setText(rs1.getString("price"));
+                jLabel11.setIcon(new ImageIcon("./Food/" + rs1.getString("image")));
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       
-       
+
         String getval;
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
-   LocalDateTime now = LocalDateTime.now(); 
-   String date=dtf.format(now);
-   
-   
-       Calendar cal = Calendar.getInstance();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDateTime now = LocalDateTime.now();
+        String date = dtf.format(now);
+
+        Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        System.out.println( sdf.format(cal.getTime()) );
-   
-   String time=sdf.format(cal.getTime());
-   
-     //   int val=Integer.parseInt(jTextField1.getText());
-       int val1=Integer.parseInt(qua);
-       if(jTextField1.getText().toString().equals("")){
-           JOptionPane.showMessageDialog(this, "Enter Qunatity in Textfield");
-       }
-     
-       else if(val1 < Integer.parseInt(jTextField1.getText())){
-           JOptionPane.showMessageDialog(this, "Oops.. Large Quantity...Check Table"); 
-       }
-       else{
-           try{
-           String user=UserLogin.mail;
-           int pri=Integer.parseInt(jLabel8.getText()) * Integer.parseInt(jTextField1.getText()) ;
-           PreparedStatement pst=con.prepareStatement("insert into cart values(?,?,?,?,?,?,?)");
-        
-       //  String sql="insert into register values(?,?,?)";
-         
-           // pst=con.prepareStatement(sql);
-            pst.setString(1, UserLogin.mail);
-            pst.setString(2,jLabel5.getText().toString());
-            pst.setString(3,jTextField1.getText().toString());
-           pst.setString(4, String.valueOf(pri));
-             pst.setString(5, date);
-             pst.setString(6, time);
-             pst.setString(7, "ordered");
-            pst.executeUpdate();
-           jLabel12.setVisible(true);
-           jLabel12.setText("Added  "+count);
-           count=count+1;
-           int quan=Integer.parseInt(jLabel7.getText()) - Integer.parseInt(jTextField1.getText()) ;
-               JOptionPane.showMessageDialog(this, "Cart Added");
-                 String sql="UPDATE foods set quantity='"+quan+"' where foodname='"+fname+"'";
-            System.out.println("sql"+sql);
-           st.executeUpdate(sql);
-       }
-     
-        catch (SQLException ex) {
-           Logger.getLogger(UserRegister.class.getName()).log(Level.SEVERE, null, ex);
-       }
-       }
+        System.out.println(sdf.format(cal.getTime()));
+
+        String time = sdf.format(cal.getTime());
+
+        //   int val=Integer.parseInt(jTextField1.getText());
+        int val1 = Integer.parseInt(qua);
+        if (jTextField1.getText().toString().equals("")) {
+            JOptionPane.showMessageDialog(this, "Enter Qunatity");
+        } else if (val1 < Integer.parseInt(jTextField1.getText())) {
+            JOptionPane.showMessageDialog(this, "Oops.. Large Quantity... Check Menu");
+        } else {
+            try {
+                String user = UserLogin.mail;
+                int pri = Integer.parseInt(jLabel8.getText()) * Integer.parseInt(jTextField1.getText());
+                PreparedStatement pst = con.prepareStatement("insert into cart values(?,?,?,?,?,?,?)");
+
+                //  String sql="insert into register values(?,?,?)";
+                // pst=con.prepareStatement(sql);
+                pst.setString(1, UserLogin.mail);
+                pst.setString(2, jLabel5.getText().toString());
+                pst.setString(3, jTextField1.getText().toString());
+                pst.setString(4, String.valueOf(pri));
+                pst.setString(5, date);
+                pst.setString(6, time);
+                pst.setString(7, "ordered");
+                pst.executeUpdate();
+                jLabel12.setVisible(true);
+                jLabel12.setText("Added  " + count);
+                count = count + 1;
+                int quan = Integer.parseInt(jLabel7.getText()) - Integer.parseInt(jTextField1.getText());
+                JOptionPane.showMessageDialog(this, "Item Ordered Successfully");
+                String sql = "UPDATE foods set quantity='" + quan + "' where foodname='" + fname + "'";
+                System.out.println("sql" + sql);
+                st.executeUpdate(sql);
+            } catch (SQLException ex) {
+                Logger.getLogger(UserRegister.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

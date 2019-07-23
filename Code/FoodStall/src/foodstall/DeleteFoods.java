@@ -7,10 +7,12 @@ package foodstall;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
+import java.sql.Connection;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -20,8 +22,11 @@ import javax.swing.table.DefaultTableModel;
  * @author EGC
  */
 public class DeleteFoods extends javax.swing.JFrame {
-Statement st;
- String fname,qua,price;
+
+    Statement st, st1;
+    Connection con;
+    String fname, qua, price;
+
     /**
      * Creates new form DeleteFoods
      */
@@ -29,16 +34,13 @@ Statement st;
         initComponents();
         this.setResizable(false);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
-  
-             try
-        {
-              Class.forName("com.mysql.jdbc.Driver");
-            java.sql.Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/foodstall","root","");
-            st=con.createStatement();
-        }
-        catch(Exception e)
-        {
+        this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            java.sql.Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/foodstall", "root", "");
+            st = con.createStatement();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -227,85 +229,60 @@ this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize()
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-           try {
+        try {
             Vector col = new Vector();
             Vector data = new Vector();
-           ResultSet rs = st.executeQuery("SELECT * FROM foods");
+            ResultSet rs = st.executeQuery("SELECT * FROM foods");
             ResultSetMetaData md = rs.getMetaData();
             int columns = md.getColumnCount();
-            for (int i = 1; i <= columns; i++) 
-            {
+            for (int i = 1; i <= columns; i++) {
                 col.addElement(md.getColumnName(i));
             }
             //System.out.println(i);
-            while (rs.next()) 
-            {
+            while (rs.next()) {
                 Vector row = new Vector(columns);
-                for (int i = 1; i <= columns; i++) 
-                {
+                for (int i = 1; i <= columns; i++) {
                     row.addElement(rs.getObject(i));
                 }
                 data.addElement(row);
             }
             DefaultTableModel model = new DefaultTableModel(data, col);
             jTable1.setModel(model);
-}
-catch(Exception e)
-{
-    e.printStackTrace();
-}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_formWindowOpened
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-         int row=jTable1.rowAtPoint(evt.getPoint());
+        int row = jTable1.rowAtPoint(evt.getPoint());
+        fname = jTable1.getValueAt(row, 0).toString();
+        qua = jTable1.getValueAt(row, 2).toString();
+        price = jTable1.getValueAt(row, 3).toString();
 
-        int col= jTable1.columnAtPoint(evt.getPoint());
-         fname=jTable1.getValueAt(row, 0).toString();
-           qua=jTable1.getValueAt(row, 2).toString();
-            price=jTable1.getValueAt(row, 3).toString();
-//         JOptionPane.showMessageDialog(rootPane,id);
-//          JOptionPane.showMessageDialog(rootPane,name);
-        //System.out.println(owner);
-       
-         try
-        {
-//            JOptionPane.showMessageDialog(rootPane,"Checking");
-             com.mysql.jdbc.Connection con = null;
-           Class.forName("com.mysql.jdbc.Driver").newInstance();
-           con=(com.mysql.jdbc.Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/foodstall","root","");
-           com.mysql.jdbc.Statement st1 = (com.mysql.jdbc.Statement) con.createStatement();
-             ResultSet rs1 = st1.executeQuery("SELECT * FROM foods where foodname='"+fname+"' and quantity='"+qua+"'");
-             while(rs1.next())
-           {
-//               JOptionPane.showMessageDialog(rootPane,"Condition");
-               jTextField1.setText(rs1.getString("foodname"));
-               jTextField2.setText(rs1.getString("quantity"));
-               jTextField3.setText(rs1.getString("price"));
-           }
-        }
-        catch(Exception e)
-        {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/foodstall", "root", "");
+            st1 = con.createStatement();
+            ResultSet rs1 = st1.executeQuery("SELECT * FROM foods where foodname='" + fname + "' and quantity='" + qua + "'");
+            while (rs1.next()) {
+                jTextField1.setText(rs1.getString("foodname"));
+                jTextField2.setText(rs1.getString("quantity"));
+                jTextField3.setText(rs1.getString("price"));
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        try
-        {
-//         
-            
-           st.executeUpdate("DELETE FROM foods where foodname='"+fname+"' and quantity='"+qua+"'");
-            // st1.executeQuery("SELECT * FROM foods where foodname='"+fname+"' and quantity='"+qua+"'");
-               JOptionPane.showMessageDialog(this, "Food Deleted");
-//               this.invalidate();
-//this.validate();
-//this.repaint();
-this.setVisible(false);
-new DeleteFoods().setVisible(true);
-        }
-        catch(Exception e)
-        {
+        try {
+            st.executeUpdate("DELETE FROM foods where foodname='" + fname + "' and quantity='" + qua + "'");
+            this.setVisible(false);
+            new DeleteFoods().setVisible(true);
+            JOptionPane.showMessageDialog(this, "Food Deleted!");
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -315,28 +292,20 @@ new DeleteFoods().setVisible(true);
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try
-        {
-         qua=jTextField2.getText();
-            price=jTextField3.getText();
-           String sql="UPDATE foods set quantity='"+qua+"', price='"+price+"' where foodname='"+fname+"'";
-            System.out.println("sql"+sql);
-           st.executeUpdate(sql);
-            // st1.executeQuery("SELECT * FROM foods where foodname='"+fname+"' and quantity='"+qua+"'");
-               JOptionPane.showMessageDialog(this, "Food Updated");
-//               this.invalidate();
-//this.validate();
-//this.repaint();
-this.setVisible(false);
-new DeleteFoods().setVisible(true);
-        }
-        catch(Exception e)
-        {
+        try {
+            qua = jTextField2.getText();
+            price = jTextField3.getText();
+            String sql = "UPDATE foods set quantity='" + qua + "', price='" + price + "' where foodname='" + fname + "'";
+            System.out.println("sql" + sql);
+            st.executeUpdate(sql);
+            JOptionPane.showMessageDialog(this, "Food Updated");
+            this.setVisible(false);
+            new DeleteFoods().setVisible(true);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
-                             
- 
+
     /**
      * @param args the command line arguments
      */

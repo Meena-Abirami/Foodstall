@@ -22,7 +22,8 @@ import javax.swing.JOptionPane;
  */
 public class UserRegister extends javax.swing.JFrame {
 
-String combo;
+    String combo;
+
     /**
      * Creates new form UserRegister
      */
@@ -34,10 +35,9 @@ String combo;
         buttonGroup1.add(jRadioButton2);
         jRadioButton1.setActionCommand("Male");
         jRadioButton2.setActionCommand("Female");
-     Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
-  
-       
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
+
     }
 
     /**
@@ -254,59 +254,47 @@ this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize()
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-      String email1 = jTextField2.getText().toString();
-      Boolean b = email1.matches(EMAIL_REGEX);
-      
-        if(jTextField1.getText().toString().equals("")&& jPasswordField1.getText().toString().equals("")
-                  &&jTextField2.getText().toString().equals("")&&jTextArea1.getText().toString().equals("")){
-                JOptionPane.showMessageDialog(this, "Fill All Fields");
-        }
-          else if(jTextField1.getText().toString().equals("")){
-               JOptionPane.showMessageDialog(this, "Name field is empty");
-          }
-         
-          else if(jPasswordField1.getText().toString().equals("")){
-               JOptionPane.showMessageDialog(this, "Password field is empty");
-          }
-          
-           else if(jTextField2.getText().toString().equals("")){
-               JOptionPane.showMessageDialog(this, "Email ID field is empty");
-          }
-            else if(b==false)
-      {
-          JOptionPane.showMessageDialog(null,"InValid Email");
-      } 
-            else if(jTextArea1.getText().toString().equals("")){
-               JOptionPane.showMessageDialog(this, "Address field is empty");
-          }
-        else{
-          try{
-              combo=jComboBox1.getSelectedItem().toString();
-         Connection connection=DriverManager.getConnection
-                 ("jdbc:mysql://localhost:3306/foodstall","root","");
+        String email1 = jTextField2.getText().toString();
+        Boolean b = email1.matches(EMAIL_REGEX);
+
+        if (jTextField1.getText().toString().equals("") && jPasswordField1.getText().toString().equals("")
+                && jTextField2.getText().toString().equals("") && jTextArea1.getText().toString().equals("")) {
+            JOptionPane.showMessageDialog(this, "Fill All Fields");
+        } else if (jTextField1.getText().toString().equals("")) {
+            JOptionPane.showMessageDialog(this, "Name field is empty");
+        } else if (jPasswordField1.getText().toString().equals("")) {
+            JOptionPane.showMessageDialog(this, "Password field is empty");
+        } else if (jTextField2.getText().toString().equals("")) {
+            JOptionPane.showMessageDialog(this, "Email ID field is empty");
+        } else if (b == false) {
+            JOptionPane.showMessageDialog(null, "InValid Email");
+        } else if (jTextArea1.getText().toString().equals("")) {
+            JOptionPane.showMessageDialog(this, "Address field is empty");
+        } else {
+            try {
+                combo = jComboBox1.getSelectedItem().toString();
+                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/foodstall", "root", "");
                 //Preapared Statement
-                PreparedStatement pst=connection.prepareStatement("insert into user values(?,?,?,?,?,?)");
-        
-       //  String sql="insert into register values(?,?,?)";
-         
-           // pst=con.prepareStatement(sql);
-            pst.setString(1, jTextField1.getText().toString());
-            pst.setString(2,jPasswordField1.getText().toString());
-            pst.setString(3,jTextField2.getText().toString());
-           pst.setString(4, buttonGroup1.getSelection().getActionCommand());
-             pst.setString(5, jTextArea1.getText().toString());
-             pst.setString(6, combo);
-            pst.executeUpdate();
-            
+                PreparedStatement pst = connection.prepareStatement("insert into user values(?,?,?,?,?,?)");
+
+                //  String sql="insert into register values(?,?,?)";
+                // pst=con.prepareStatement(sql);
+                pst.setString(1, jTextField1.getText().toString());
+                pst.setString(2, jPasswordField1.getText().toString());
+                pst.setString(3, jTextField2.getText().toString());
+                pst.setString(4, buttonGroup1.getSelection().getActionCommand());
+                pst.setString(5, jTextArea1.getText().toString());
+                pst.setString(6, combo);
+                pst.executeUpdate();
+
                 JOptionPane.showMessageDialog(this, "Registeration Completed");
                 new UserLogin().setVisible(true);
-             
-         }
-         catch (SQLException ex) {
-           Logger.getLogger(UserRegister.class.getName()).log(Level.SEVERE, null, ex);
-       }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(UserRegister.class.getName()).log(Level.SEVERE, null, ex);
+            }
             //JOptionPane.showMessageDialog(null,"Login Successfully");
-          
+
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

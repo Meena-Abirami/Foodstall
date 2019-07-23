@@ -70,10 +70,10 @@ this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize()
         );
 
         jPanel1.add(jPanel2);
-        jPanel2.setBounds(0, 0, 640, 105);
+        jPanel2.setBounds(0, 0, 640, 109);
 
         jButton1.setBackground(new java.awt.Color(255, 218, 68));
-        jButton1.setText("Cart");
+        jButton1.setText("Menu");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
